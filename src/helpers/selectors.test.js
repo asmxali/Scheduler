@@ -43,18 +43,6 @@ const state = {
       name: "Tori Malcolm",
       avatar: "https://i.imgur.com/Nmx0Qxo.png"
     }
-  },
-  interviews: {
-    "4": {
-      avatar: "https://i.imgur.com/LpaY82x.png",
-      id: 1,
-      name: "Sylvia Palmer"
-    },
-    "5": {
-      id: 2,
-      name: "Tori Malcolm",
-      avatar: "https://i.imgur.com/Nmx0Qxo.png"
-    }
   }
 };
 
@@ -91,13 +79,12 @@ test("getInterviewsForDay returns an array", () => {
 
 test("getInterviewsForDay returns an array with a length matching the number of interviews for that day", () => {
   const result = getInterviewersForDay(state, "Monday");
-  expect(result.length).toEqual(3);
+  expect(result.length).toEqual(1);
 });
 
-test("getInterviewsForDay returns an array containing the correct appointment objects", () => {
-  const [first, second] = getInterviewersForDay(state, "Tuesday");
-  expect(first).toEqual(state.interviews["4"]);
-  expect(second).toEqual(state.interviews["5"]);
+test("getInterviewsForDay returns an array containing the correct interviewer objects", () => {
+  const result = getInterviewersForDay(state, "Tuesday");
+  expect(result).toEqual([state.interviewers["2"]]);
 });
 
 test("getInterviewsForDay returns an empty array when the days data is empty", () => {
