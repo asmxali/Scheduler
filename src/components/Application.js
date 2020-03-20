@@ -4,7 +4,7 @@ import "components/Application.scss";
 import DayList from "./DayList";
 // import InterviewerList from "./InterviewerList";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 import axios from "axios";
 
 export default function Application(props) {
