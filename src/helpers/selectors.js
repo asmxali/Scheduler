@@ -10,23 +10,12 @@ export function getAppointmentsForDay(state, day) {
 export function getInterviewersForDay(state, day) {
   if (state.days.length === 0) return [];
   if (!state.days.map(item => item.name).includes(day)) return [];
-  const filteredDays = state.days.filter(element => element.name === day)[0]
-    .appointments;
-  const filteredAppointments = filteredDays.map(id => state.appointments[id]);
+  const filteredDays = state.days.filter(element => element.name === day)[0];
 
-  const filteredInterviewersID = filteredAppointments
-    .map(app => {
-      if (app.interview) {
-        return app.interview.interviewer;
-      }
-    })
-    .filter(id => id != undefined);
-  const filteredInterviewers = filteredInterviewersID.map(id => {
-    if (state.interviewers[id]) return state.interviewers[id];
-  });
-
-  console.log(filteredInterviewers);
-  return filteredInterviewers;
+  const result = Object.values(state.interviewers).filter(interviewer =>
+    filteredDays.interviewers.includes(interviewer.id)
+  );
+  return result;
 }
 
 export function getInterview(state, interview) {

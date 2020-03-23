@@ -4,7 +4,11 @@ import "components/Application.scss";
 import DayList from "./DayList";
 // import InterviewerList from "./InterviewerList";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay
+} from "helpers/selectors";
 import axios from "axios";
 
 export default function Application(props) {
@@ -39,19 +43,25 @@ export default function Application(props) {
   }, []);
   console.log(state.interviewers);
   const appointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
 
-  const schedule = appointments.map(appointment => {
-    const interview = getInterview(state, appointment.interview);
-
-    return (
-      <Appointment
-        key={appointment.id}
-        id={appointment.id}
-        time={appointment.time}
-        interview={interview}
-      />
-    );
-  });
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+  }
+  function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer
+    };
+  }
   return (
     <main className="layout">
       <section className="sidebar">
@@ -72,8 +82,15 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {getAppointmentsForDay(state, state.day).map(a => {
+          const interview = getInterview(state, a.interview);
           return (
-            <Appointment id={a.id} time={a.time} interview={a.interview} />
+            <Appointment
+              id={a.id}
+              time={a.time}
+              interview={interview}
+              interviewers={interviewers}
+              bookInterview={bookInterview(a.id, interview)}
+            />
           );
         })}
         <Appointment id="last" time="5pm" />
