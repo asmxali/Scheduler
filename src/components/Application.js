@@ -10,14 +10,22 @@ import {
   getInterviewersForDay
 } from "helpers/selectors";
 import axios from "axios";
+import useVisualMode from "hooks/useVisualMode";
 
 export default function Application(props) {
+  const EMPTY = "EMPTY";
+  const SHOW = "SHOW";
+
+  const { mode, transition, back } = useVisualMode(
+    props.interview ? SHOW : EMPTY
+  );
   const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {},
     interviewers: {}
   });
+
   const setDay = day => setState({ ...state, day });
 
   useEffect(() => {
@@ -55,11 +63,33 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
+
     setState({
       ...state,
       appointments
     });
+
+    return axios.put(`api/appointments/${id}`, appointment);
   }
+  const cancelInterview = function(id) {
+    console.log("before: ", state.appointments[id].interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({
+      ...state,
+      appointments
+    });
+
+    console.log("after: ", state.appointments[id].interview);
+    return axios.delete(`api/appointments/${id}`, appointment);
+  };
 
   return (
     <main className="layout">
@@ -83,22 +113,18 @@ export default function Application(props) {
         {getAppointmentsForDay(state, state.day).map(a => {
           const interview = getInterview(state, a.interview);
 
-          // function save(name, interviewer) {
-          //   const interview = {
-          //     student: name,
-          //     interviewer
-          //   };
-          //   bookInterview(a.id, interview);
-          //   return interview;
-          // }
           return (
             <Appointment
+              //when new props are called everything is refreshed when you have a unique key
+              //if not only the prop data will get updated
+              //can cause errors when using mode and transitions
+              key={a.id}
               id={a.id}
               time={a.time}
               interview={interview}
               interviewers={interviewers}
-              // onSave={save}
               bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
             />
           );
         })}
