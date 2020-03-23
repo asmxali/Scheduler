@@ -41,7 +41,7 @@ export default function Application(props) {
       });
     });
   }, []);
-  console.log(state.interviewers);
+
   const appointments = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
 
@@ -55,13 +55,12 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
+    setState({
+      ...state,
+      appointments
+    });
   }
-  function save(name, interviewer) {
-    const interview = {
-      student: name,
-      interviewer
-    };
-  }
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -83,13 +82,23 @@ export default function Application(props) {
       <section className="schedule">
         {getAppointmentsForDay(state, state.day).map(a => {
           const interview = getInterview(state, a.interview);
+
+          // function save(name, interviewer) {
+          //   const interview = {
+          //     student: name,
+          //     interviewer
+          //   };
+          //   bookInterview(a.id, interview);
+          //   return interview;
+          // }
           return (
             <Appointment
               id={a.id}
               time={a.time}
               interview={interview}
               interviewers={interviewers}
-              bookInterview={bookInterview(a.id, interview)}
+              // onSave={save}
+              bookInterview={bookInterview}
             />
           );
         })}
