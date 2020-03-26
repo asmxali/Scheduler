@@ -12,13 +12,12 @@ export default function useApplicationData() {
 
   useEffect(() => {
     axios.get(`http://localhost:8001/api/days`).then(response => {
-      // console.log(response.data);
-      // setDays(response.data);
       Promise.all([
         Promise.resolve(axios.get(`http://localhost:8001/api/days`)),
         Promise.resolve(axios.get(`http://localhost:8001/api/appointments`)),
         Promise.resolve(axios.get(`http://localhost:8001/api/interviewers`))
       ]).then(all => {
+        //takes the data and stores them into state.days, state.appointments and state.interviewers
         setState(prev => ({
           ...prev,
           days: all[0].data,
@@ -42,18 +41,39 @@ export default function useApplicationData() {
 
     //creates a new state.days object with the updated spots
     //spots decreases by one when a new appointment is booked
-    const a = state.days.map(day => {
+    const newSpots = state.days.map(day => {
       if (day.name === state.day) {
         day.spots--;
       }
       return day;
     });
-
+    //the state only changes once the request is complete
     return axios.put(`api/appointments/${id}`, appointment).then(() => {
       setState({
         ...state,
         appointments,
-        days: a
+        days: newSpots
+      });
+    });
+  };
+
+  // similar to bookInterview() but does not change the amount of spots available in that day
+  const editInterviewSlot = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    //the state only changes once the request is complete
+    return axios.put(`api/appointments/${id}`, appointment).then(() => {
+      setState({
+        ...state,
+        appointments
       });
     });
   };
@@ -69,8 +89,7 @@ export default function useApplicationData() {
     };
     //creates a new state.days object with the updated spots
     //spots increases by one when an appointment is deleted
-
-    const a = state.days.map(day => {
+    const newSpots = state.days.map(day => {
       if (day.name === state.day) {
         day.spots++;
       }
@@ -81,10 +100,10 @@ export default function useApplicationData() {
       setState({
         ...state,
         appointments,
-        days: a
+        days: newSpots
       });
     });
   };
 
-  return { cancelInterview, bookInterview, state, setDay };
+  return { cancelInterview, bookInterview, state, setDay, editInterviewSlot };
 }

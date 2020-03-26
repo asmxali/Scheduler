@@ -10,6 +10,7 @@ import useVisualMode from "hooks/useVisualMode";
 import "components/Appointment/styles.scss";
 import Header from "./Header";
 
+//different modes that can be displayed for each appointment
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
@@ -40,10 +41,21 @@ export default function Appointment(props) {
     };
     transition(SAVING, true);
 
-    props
-      .bookInterview(props.id, interview)
-      .then(() => transition(SHOW))
-      .catch(error => transition(ERROR_SAVE));
+    console.log("mode: ", mode);
+
+    //depending on whether you are editing or creating a new appointment
+    //two different functions will be called which are defined in hooks/useApplicationData.js
+    if (mode === EDIT) {
+      props
+        .editInterviewSlot(props.id, interview)
+        .then(() => transition(SHOW))
+        .catch(error => transition(ERROR_SAVE));
+    } else {
+      props
+        .bookInterview(props.id, interview)
+        .then(() => transition(SHOW))
+        .catch(error => transition(ERROR_SAVE));
+    }
   }
 
   function confirmDeletion() {
@@ -84,6 +96,7 @@ export default function Appointment(props) {
         />
       )}
       {mode === EDIT && (
+        //this form includes the pre-existing values of the appointment(name and interviewer)
         <Form
           name={props.interview.student}
           interviewer={props.interview.interviewer.id}

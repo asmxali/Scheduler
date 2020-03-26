@@ -14,9 +14,13 @@ export default function Application(props) {
     state,
     setDay,
     bookInterview,
+    editInterviewSlot,
     cancelInterview
   } = useApplicationData();
+
+  //data from the different states are stored in variables which will be used throughout the app
   const interviewers = getInterviewersForDay(state, state.day);
+  //loops throught appoinments data and returns respective html for each appointment
   const appointments = getAppointmentsForDay(state, state.day).map(a => {
     const interview = getInterview(state, a.interview);
 
@@ -31,6 +35,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        editInterviewSlot={editInterviewSlot}
         cancelInterview={cancelInterview}
       />
     );
