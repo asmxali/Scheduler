@@ -53,7 +53,7 @@ export default function Appointment(props) {
     transition(EDIT);
   }
   return (
-    <article className="appointment">
+    <article className="appointment" data-testid="appointment">
       <Header id={props.id} time={props.time} />
       {mode === SHOW && props.interview && (
         <Show

@@ -28,15 +28,13 @@ export default function useApplicationData() {
       });
     });
   }, []);
-  function refreshPage() {
-    window.location.reload(false);
-  }
 
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
+
     const appointments = {
       ...state.appointments,
       [id]: appointment
@@ -51,16 +49,16 @@ export default function useApplicationData() {
       return day;
     });
 
-    return axios.put(`api/appointments/${id}`, appointment).then(() =>
+    return axios.put(`api/appointments/${id}`, appointment).then(() => {
       setState({
         ...state,
-        appointments
-      })
-    );
+        appointments,
+        days: a
+      });
+    });
   };
 
   const cancelInterview = id => {
-    console.log("before: ", state.appointments[id].interview);
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -71,18 +69,21 @@ export default function useApplicationData() {
     };
     //creates a new state.days object with the updated spots
     //spots increases by one when an appointment is deleted
+
     const a = state.days.map(day => {
       if (day.name === state.day) {
         day.spots++;
       }
       return day;
     });
-    return axios.delete(`api/appointments/${id}`, appointment).then(() =>
+
+    return axios.delete(`api/appointments/${id}`, appointment).then(() => {
       setState({
         ...state,
-        appointments
-      })
-    );
+        appointments,
+        days: a
+      });
+    });
   };
 
   return { cancelInterview, bookInterview, state, setDay };
