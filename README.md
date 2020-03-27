@@ -12,7 +12,7 @@ Students can:
 - Edit an existing interview, this allows them to change the student name and the interviewer.
 - Delete an interview, the app will confirm with the user if they want to delete the appointment as this is a desstructive action.
 
-\*If the server returns an error while saving or deleting an apoointment an appropriate error message is displayed.
+If the server returns an error while saving or deleting an apoointment an appropriate error message is displayed.
 
 ![](https://github.com/asmxali/scheduler/blob/master/InterviewScheduler.gif)
 
