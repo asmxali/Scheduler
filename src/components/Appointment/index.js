@@ -41,8 +41,6 @@ export default function Appointment(props) {
     };
     transition(SAVING, true);
 
-    console.log("mode: ", mode);
-
     //depending on whether you are editing or creating a new appointment
     //two different functions will be called which are defined in hooks/useApplicationData.js
     if (mode === EDIT) {
