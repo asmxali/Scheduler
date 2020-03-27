@@ -4,7 +4,7 @@ Using the latest tools and techniques, I built and tested a React application th
 
 # Demo
 
-![](Interview Scheduler.gif)
+![](https://github.com/asmxali/scheduler/blob/master/docs/Interview Scheduler.gif)
 
 ## Setup
 
